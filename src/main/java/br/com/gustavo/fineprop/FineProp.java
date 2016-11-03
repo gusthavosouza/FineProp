@@ -21,7 +21,7 @@ public class FineProp {
 		if (obj == null)
 			return;
 
-		loadProp();
+		loadFile();
 
 		Field fields[] = obj.getClass().getDeclaredFields();
 
@@ -41,7 +41,7 @@ public class FineProp {
 		return properties.getProperty(key);
 	}
 	
-	private static void loadProp () throws FileNotFoundException, IOException {
+	private static void loadFile () throws FileNotFoundException, IOException {
 		Properties prop = new Properties();
 
 		try (FileInputStream fis = new FileInputStream(new File(FineProp.filePath))) {
@@ -94,7 +94,7 @@ public class FineProp {
 		return value;
 	}
 	
-	public static void propFile(String newFilePath) throws FinePropException {
+	public static void finePropFile(String newFilePath) throws FinePropException {
 
 		if (newFilePath == null || newFilePath.isEmpty())
 			throw new FinePropException("file path cannot be null...");

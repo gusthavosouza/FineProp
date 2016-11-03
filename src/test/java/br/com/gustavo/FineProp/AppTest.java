@@ -6,6 +6,7 @@ import java.io.IOException;
 import br.com.gustavo.fineprop.FineProp;
 import br.com.gustavo.fineprop.annotations.Propertie;
 import br.com.gustavo.fineprop.annotations.PropertieArray;
+import br.com.gustavo.fineprop.exception.FinePropException;
 
 /**
  * Unit test for simple App.
@@ -20,13 +21,16 @@ public class AppTest {
 	@PropertieArray(key = "EMAILS")
 	private static String[] EMAILS = null;
 
-	public AppTest() throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException {
+	public AppTest() throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException, FinePropException {
+		// default file in project
 		FineProp.loadProp(this);
+//		FineProp.finePropFile("pathToFile");
 	}
 
 	public static void main(String[] args)
-			throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException {
-		AppTest app = new AppTest();
+			throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException, FinePropException {
+		
+		new AppTest();
 
 		System.out.println(SEND_MAIL + "");
 		System.out.println(TIME_TO_SEND + "");
