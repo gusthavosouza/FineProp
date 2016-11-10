@@ -42,6 +42,14 @@ public static void main(String[] args) {
 }
 
 ```
+or work whith object
+
+```
+public FinePropTest() {
+	FineProp.loadProp(this);
+}
+
+```
 
 ## License
 Copyright 2016 Gustavo de Souza. All Rights Reserved.
