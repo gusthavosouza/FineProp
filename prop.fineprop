@@ -2,3 +2,4 @@ SEND_MAIL=true
 TIME_TO_SEND=
 # DEFAULT SPLIT = ;
 EMAILS=gusthavo.souzapereira@gmail.com
+#;gusthavo.souzapereira

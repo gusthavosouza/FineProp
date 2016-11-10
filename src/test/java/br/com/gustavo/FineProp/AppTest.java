@@ -14,28 +14,25 @@ import br.com.gustavo.fineprop.exception.FinePropException;
 public class AppTest {
 
 	@Propertie(key = "SEND_MAIL")
-	private static Boolean SEND_MAIL;
+	protected static Boolean SEND_MAIL;
 	@Propertie(key = "TIME_TO_SEND")
 	private static int TIME_TO_SEND;
-
 	@PropertieArray(key = "EMAILS")
-	private static String[] EMAILS = null;
+	public static String EMAILS = null;
 
-	public AppTest() throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException, FinePropException {
-		// default file in project
-		FineProp.loadProp(this);
-//		FineProp.finePropFile("pathToFile");
+	public AppTest() throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException,
+			FinePropException {
+		// FineProp.loadProp(this);
+		// FineProp.finePropFile("pathToFile");
 	}
 
-	public static void main(String[] args)
-			throws FileNotFoundException, IllegalArgumentException, IllegalAccessException, IOException, FinePropException {
-		
-		new AppTest();
+	public static void main(String[] args) throws FileNotFoundException, IllegalArgumentException,
+			IllegalAccessException, IOException, FinePropException, SecurityException, InstantiationException {
+
+		FineProp.loadProp(AppTest.class);
 
 		System.out.println(SEND_MAIL + "");
 		System.out.println(TIME_TO_SEND + "");
-		
-		for (int i = 0; i < EMAILS.length; i++)
-			System.out.println(EMAILS[i]);	
+		System.out.println(EMAILS);
 	}
 }

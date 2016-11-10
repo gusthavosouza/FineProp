@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import br.com.gustavo.fineprop.annotations.Propertie;
@@ -16,14 +18,13 @@ public class FineProp {
 	protected static String filePath = System.getProperty("user.dir") + "/prop.fineprop";
 	protected static Properties properties;
 	
-	public static void loadProp(Object obj) throws FileNotFoundException, IOException, IllegalArgumentException, IllegalAccessException {
-
-		if (obj == null)
-			return;
+	public static void loadProp (Class<?> cl) throws IllegalArgumentException, IllegalAccessException, SecurityException, FileNotFoundException, IOException, InstantiationException {
+		loadProp(cl.getDeclaredFields(), cl);
+	}
+	
+	private static void loadProp (Field[] fields, Object obj) throws FileNotFoundException, IOException, IllegalArgumentException, IllegalAccessException, InstantiationException {
 
 		loadFile();
-
-		Field fields[] = obj.getClass().getDeclaredFields();
 
 		for (int i = 0; i < fields.length; i++) {
 			Field f = fields[i];
@@ -32,9 +33,23 @@ public class FineProp {
 				setField(f, obj, getProp(((Propertie) f.getAnnotation(Propertie.class)).key()));
 			else if (f.isAnnotationPresent(PropertieArray.class)) {
 				PropertieArray p = f.getAnnotation(PropertieArray.class);
-				setValue(f, obj, getProp(p.key()).split(p.separator()));
+				
+				String prop = getProp(p.key());
+				if (prop != null)
+					if (prop.contains(p.separator()))
+						setValue(f, obj, prop.split(p.separator()));
+					else
+						setValue(f, obj, prop);
 			}
 		}
+	}
+	
+	public static void loadProp(Object obj) throws FileNotFoundException, IOException, IllegalArgumentException, IllegalAccessException, InstantiationException, SecurityException {
+
+		if (obj == null)
+			return;
+
+		loadProp(obj.getClass().getFields(), obj);
 	}
 	
 	private static String getProp(String key) {
@@ -61,7 +76,23 @@ public class FineProp {
 		set(f, source, cast(f.getType(), value));
 	}
 
-	private static void setValue(Field f, Object source, Object[] value) throws IllegalArgumentException, IllegalAccessException {
+	// TODO add support to Collections....
+	private static void setValue(Field f, Object source, Object value) throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+		
+		
+		if (List.class.isAssignableFrom(f.getType())) {
+			
+			@SuppressWarnings("unchecked")
+			List<String> list = (List<String>) f.getType().newInstance();
+			
+			if (value instanceof String [])
+				list.addAll(Arrays.asList((String[])value));
+			else
+				list.add((String) value);
+			
+			value = list;
+		} 
+
 		set(f, source, value);
 	}
 
