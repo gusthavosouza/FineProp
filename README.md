@@ -51,6 +51,10 @@ public FinePropTest() {
 
 ```
 
+## Java 7
+Java 7 or remove Try with resources see:
+https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+
 ## License
 Copyright 2016 Gustavo de Souza. All Rights Reserved.
 
