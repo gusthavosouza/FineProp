@@ -14,9 +14,11 @@
 
 package br.com.gustavo.fineprop;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -79,6 +81,14 @@ public class FineProp {
 		FineProp.properties = prop;
 	}
 	
+	private static Object get(Field f, Object source) throws IllegalArgumentException, IllegalAccessException {
+		boolean acc = f.isAccessible();
+		f.setAccessible(true);
+		Object obj = f.get(source);
+		f.setAccessible(acc);
+		return obj;
+	}
+	
 	private static void set(Field f, Object source, Object value) throws IllegalArgumentException, IllegalAccessException {
 		boolean acc = f.isAccessible();
 		f.setAccessible(true);
@@ -116,6 +126,25 @@ public class FineProp {
 		return type.cast(value);
 	}
 
+	public static boolean saveConfig(Class<?> type) {
+		
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(filePath)))) {
+			Field[] fields = type.getDeclaredFields();
+			for (int i = 0; i < fields.length; i++) {
+				Field f = fields[i];
+				if (f.isAnnotationPresent(Propertie.class)) {
+					bufferedWriter.write(f.getAnnotation(Propertie.class).key() + "=" + get(f, type));
+					bufferedWriter.newLine();
+					bufferedWriter.flush();
+				}
+					
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	
 	private static Object c (Class<?> type, String value) {
 
 		if (value == null || value.isEmpty())
